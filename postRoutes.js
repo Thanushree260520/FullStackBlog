@@ -7,9 +7,9 @@ const {
   getPosts,
   updatePost,
   deletePost
-} = require("../controllers/postController");
+} = require("./postController");
 
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("./authMiddleware");
 
 // Get all posts
 router.get("/", getPosts);
