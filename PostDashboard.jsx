@@ -1,4 +1,3 @@
-```jsx
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
@@ -25,9 +24,7 @@ function PostDashboard({ onLogout }) {
 
   const token = localStorage.getItem("token");
 
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  );
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     document.body.className = darkMode ? "dark-mode" : "";
@@ -48,16 +45,13 @@ function PostDashboard({ onLogout }) {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        `${API_URL}/api/posts`
-      );
+      const response = await axios.get(`${API_URL}/api/posts`);
 
       setPosts(response.data);
     } catch (error) {
-      showMessage(
-        "Unable to load posts.",
-        "error"
-      );
+      console.error("Fetch posts error:", error);
+
+      showMessage("Unable to load posts.", "error");
     } finally {
       setLoading(false);
     }
@@ -97,12 +91,12 @@ function PostDashboard({ onLogout }) {
       setTitle("");
       setContent("");
 
-      showMessage(
-        "Post published successfully!"
-      );
+      showMessage("Post published successfully!");
 
       await fetchPosts();
     } catch (error) {
+      console.error("Create post error:", error);
+
       showMessage(
         error.response?.data?.message ||
           "Unable to create post.",
@@ -163,12 +157,12 @@ function PostDashboard({ onLogout }) {
       setTitle("");
       setContent("");
 
-      showMessage(
-        "Post updated successfully!"
-      );
+      showMessage("Post updated successfully!");
 
       await fetchPosts();
     } catch (error) {
+      console.error("Update post error:", error);
+
       showMessage(
         error.response?.data?.message ||
           "Unable to update post.",
@@ -200,12 +194,12 @@ function PostDashboard({ onLogout }) {
         cancelEdit();
       }
 
-      showMessage(
-        "Post deleted successfully!"
-      );
+      showMessage("Post deleted successfully!");
 
       await fetchPosts();
     } catch (error) {
+      console.error("Delete post error:", error);
+
       showMessage(
         error.response?.data?.message ||
           "Unable to delete post.",
@@ -260,12 +254,7 @@ function PostDashboard({ onLogout }) {
     }
 
     return result;
-  }, [
-    posts,
-    search,
-    showMyPosts,
-    user?.id,
-  ]);
+  }, [posts, search, showMyPosts, user?.id]);
 
   return (
     <div className="dashboard">
@@ -275,11 +264,13 @@ function PostDashboard({ onLogout }) {
       <nav className="navbar">
 
         <div className="nav-brand">
+
           <div className="brand-icon">
             ✦
           </div>
 
           <span>BlogSpace</span>
+
         </div>
 
         <div className="nav-links">
@@ -332,11 +323,13 @@ function PostDashboard({ onLogout }) {
             </div>
 
             <div className="user-info">
+
               <strong>
                 {user?.name || "User"}
               </strong>
 
               <span>Blogger</span>
+
             </div>
 
           </div>
@@ -349,6 +342,7 @@ function PostDashboard({ onLogout }) {
           </button>
 
         </div>
+
       </nav>
 
       {/* MAIN */}
@@ -396,6 +390,7 @@ function PostDashboard({ onLogout }) {
             </div>
 
             <div>
+
               <span className="stat-number">
                 {posts.length}
               </span>
@@ -403,6 +398,7 @@ function PostDashboard({ onLogout }) {
               <span className="stat-label">
                 Total Posts
               </span>
+
             </div>
 
           </div>
@@ -414,6 +410,7 @@ function PostDashboard({ onLogout }) {
             </div>
 
             <div>
+
               <span className="stat-number">
                 {myPosts.length}
               </span>
@@ -421,6 +418,7 @@ function PostDashboard({ onLogout }) {
               <span className="stat-label">
                 Your Posts
               </span>
+
             </div>
 
           </div>
@@ -432,6 +430,7 @@ function PostDashboard({ onLogout }) {
             </div>
 
             <div>
+
               <span className="stat-number">
                 {averageCharacters}
               </span>
@@ -439,6 +438,7 @@ function PostDashboard({ onLogout }) {
               <span className="stat-label">
                 Avg. Characters
               </span>
+
             </div>
 
           </div>
@@ -450,6 +450,7 @@ function PostDashboard({ onLogout }) {
             </div>
 
             <div>
+
               <span className="stat-number status-active">
                 {posts.length > 0
                   ? "Active"
@@ -459,6 +460,7 @@ function PostDashboard({ onLogout }) {
               <span className="stat-label">
                 Blog Status
               </span>
+
             </div>
 
           </div>
@@ -583,6 +585,7 @@ function PostDashboard({ onLogout }) {
             <div
               className={`status-message ${messageType}`}
             >
+
               <span>
                 {messageType === "error"
                   ? "!"
@@ -590,6 +593,7 @@ function PostDashboard({ onLogout }) {
               </span>
 
               {message}
+
             </div>
           )}
 
@@ -762,9 +766,14 @@ function PostDashboard({ onLogout }) {
                     <button
                       className="read-more"
                       onClick={() => {
-                        if (isOwner) {
-                          startEdit(post);
-                        }
+
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+
+                        startEdit(post);
+
                       }}
                     >
                       {isOwner
@@ -779,10 +788,12 @@ function PostDashboard({ onLogout }) {
                       <div className="author-info">
 
                         <div className="author-avatar">
+
                           {post.authorName
                             ?.charAt(0)
                             .toUpperCase() ||
                             "U"}
+
                         </div>
 
                         <div>
@@ -866,4 +877,3 @@ function PostDashboard({ onLogout }) {
 }
 
 export default PostDashboard;
-```
