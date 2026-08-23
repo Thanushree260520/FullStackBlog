@@ -1,5 +1,8 @@
+```jsx
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+
+const API_URL = "https://fullstackblog-backend.onrender.com";
 
 function PostDashboard({ onLogout }) {
   const [posts, setPosts] = useState([]);
@@ -29,10 +32,7 @@ function PostDashboard({ onLogout }) {
   useEffect(() => {
     document.body.className = darkMode ? "dark-mode" : "";
 
-    localStorage.setItem(
-      "darkMode",
-      darkMode
-    );
+    localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
   const showMessage = (text, type = "success") => {
@@ -49,7 +49,7 @@ function PostDashboard({ onLogout }) {
       setLoading(true);
 
       const response = await axios.get(
-        "http://localhost:5000/api/posts"
+        `${API_URL}/api/posts`
       );
 
       setPosts(response.data);
@@ -82,7 +82,7 @@ function PostDashboard({ onLogout }) {
       setSaving(true);
 
       await axios.post(
-        "http://localhost:5000/api/posts",
+        `${API_URL}/api/posts`,
         {
           title: title.trim(),
           content: content.trim(),
@@ -147,7 +147,7 @@ function PostDashboard({ onLogout }) {
       setSaving(true);
 
       await axios.put(
-        `http://localhost:5000/api/posts/${editingId}`,
+        `${API_URL}/api/posts/${editingId}`,
         {
           title: title.trim(),
           content: content.trim(),
@@ -188,7 +188,7 @@ function PostDashboard({ onLogout }) {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/posts/${id}`,
+        `${API_URL}/api/posts/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -243,8 +243,7 @@ function PostDashboard({ onLogout }) {
     }
 
     if (search.trim()) {
-      const query =
-        search.toLowerCase();
+      const query = search.toLowerCase();
 
       result = result.filter(
         (post) =>
@@ -261,7 +260,12 @@ function PostDashboard({ onLogout }) {
     }
 
     return result;
-  }, [posts, search, showMyPosts, user?.id]);
+  }, [
+    posts,
+    search,
+    showMyPosts,
+    user?.id,
+  ]);
 
   return (
     <div className="dashboard">
@@ -279,6 +283,7 @@ function PostDashboard({ onLogout }) {
         </div>
 
         <div className="nav-links">
+
           <button
             className="nav-link"
             onClick={() =>
@@ -303,6 +308,7 @@ function PostDashboard({ onLogout }) {
           >
             My Posts
           </button>
+
         </div>
 
         <div className="nav-right">
@@ -384,6 +390,7 @@ function PostDashboard({ onLogout }) {
         <section className="stats-container">
 
           <div className="stat-card">
+
             <div className="stat-icon purple">
               📝
             </div>
@@ -397,9 +404,11 @@ function PostDashboard({ onLogout }) {
                 Total Posts
               </span>
             </div>
+
           </div>
 
           <div className="stat-card">
+
             <div className="stat-icon blue">
               ✍️
             </div>
@@ -413,9 +422,11 @@ function PostDashboard({ onLogout }) {
                 Your Posts
               </span>
             </div>
+
           </div>
 
           <div className="stat-card">
+
             <div className="stat-icon green">
               💬
             </div>
@@ -429,9 +440,11 @@ function PostDashboard({ onLogout }) {
                 Avg. Characters
               </span>
             </div>
+
           </div>
 
           <div className="stat-card">
+
             <div className="stat-icon yellow">
               ✨
             </div>
@@ -447,6 +460,7 @@ function PostDashboard({ onLogout }) {
                 Blog Status
               </span>
             </div>
+
           </div>
 
         </section>
@@ -458,6 +472,7 @@ function PostDashboard({ onLogout }) {
           <div className="section-heading">
 
             <div>
+
               <span className="section-label">
                 {editingId
                   ? "UPDATE"
@@ -475,6 +490,7 @@ function PostDashboard({ onLogout }) {
                   ? "Make changes to your story."
                   : "Share something interesting with the community."}
               </p>
+
             </div>
 
             <div className="editor-icon">
@@ -589,6 +605,7 @@ function PostDashboard({ onLogout }) {
           <div className="posts-header">
 
             <div>
+
               <span className="section-label">
                 COMMUNITY
               </span>
@@ -601,6 +618,7 @@ function PostDashboard({ onLogout }) {
                 Discover stories and ideas
                 from the community.
               </p>
+
             </div>
 
             <span className="post-count">
@@ -664,6 +682,7 @@ function PostDashboard({ onLogout }) {
           {/* POSTS LIST */}
 
           {loading ? (
+
             <div className="empty-state">
 
               <div className="loading-spinner"></div>
@@ -678,7 +697,9 @@ function PostDashboard({ onLogout }) {
               </p>
 
             </div>
+
           ) : filteredPosts.length === 0 ? (
+
             <div className="empty-state">
 
               <div className="empty-icon">
@@ -698,7 +719,9 @@ function PostDashboard({ onLogout }) {
               </p>
 
             </div>
+
           ) : (
+
             <div className="posts-grid">
 
               {filteredPosts.map((post) => {
@@ -708,6 +731,7 @@ function PostDashboard({ onLogout }) {
                   String(user?.id);
 
                 return (
+
                   <article
                     className="post-card"
                     key={post.id}
@@ -738,12 +762,9 @@ function PostDashboard({ onLogout }) {
                     <button
                       className="read-more"
                       onClick={() => {
-                        window.scrollTo({
-                          top: 0,
-                          behavior: "smooth",
-                        });
-
-                        startEdit(post);
+                        if (isOwner) {
+                          startEdit(post);
+                        }
                       }}
                     >
                       {isOwner
@@ -765,6 +786,7 @@ function PostDashboard({ onLogout }) {
                         </div>
 
                         <div>
+
                           <strong>
                             {post.authorName ||
                               "Unknown author"}
@@ -784,6 +806,7 @@ function PostDashboard({ onLogout }) {
                                 )
                               : "Recently"}
                           </span>
+
                         </div>
 
                       </div>
@@ -791,6 +814,7 @@ function PostDashboard({ onLogout }) {
                     </div>
 
                     {isOwner && (
+
                       <div className="post-actions">
 
                         <button
@@ -812,13 +836,16 @@ function PostDashboard({ onLogout }) {
                         </button>
 
                       </div>
+
                     )}
 
                   </article>
+
                 );
               })}
 
             </div>
+
           )}
 
         </section>
@@ -826,10 +853,12 @@ function PostDashboard({ onLogout }) {
       </main>
 
       <footer className="footer">
+
         <p>
           © 2026 BlogSpace · Built with React
           & Node.js
         </p>
+
       </footer>
 
     </div>
@@ -837,3 +866,4 @@ function PostDashboard({ onLogout }) {
 }
 
 export default PostDashboard;
+```
